@@ -7,17 +7,10 @@ from app.models.user import User
 from app.DTOs.user import UserCreate
 from app.DTOs.token import RefreshTokenRequest
 from app.services.tokens import create_access_token, create_refresh_token, decode_token
+from app.api.dependencies import get_db
 
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"])
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @router.post("/register")

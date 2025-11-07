@@ -11,13 +11,13 @@ REFRESH_TOKEN_LIFETIME_DAYS = settings.refresh_token_lifetime_days
 
 def create_access_token(subject: str):
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode = {"sub": subject, "exp": expire}
+    to_encode = {"sub": str(subject), "exp": expire}
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def create_refresh_token(user_id: str):
+def create_refresh_token(subject: str):
     expire = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_LIFETIME_DAYS)
-    to_encode = {"sub": str(user_id), "exp": expire, "type": "refresh"}
+    to_encode = {"sub": str(subject), "exp": expire, "type": "refresh"}
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
