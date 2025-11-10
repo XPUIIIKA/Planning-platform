@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from jose import jwt
-from app.core.config import settings
-from fastapi import APIRouter, Depends, HTTPException
+from app.config import settings
+from fastapi import HTTPException
 
 
 SECRET_KEY = settings.secret_key

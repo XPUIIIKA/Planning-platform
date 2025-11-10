@@ -2,10 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 
-from app.db.session import SessionLocal
 from app.models.user import User
-from app.DTOs.user import UserCreate
-from app.DTOs.token import RefreshTokenRequest
+from app.api.DTOs.user import UserCreate
+from app.api.DTOs.token import RefreshTokenRequest
 from app.services.tokens import create_access_token, create_refresh_token, decode_token
 from app.api.dependencies import get_db
 
@@ -20,13 +19,13 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="email already exists")
     
     hashed = pwd_context.hash(user_data.password)
-    user = User(email=user_data.email, hashed_password=hashed)
+    user = User(email=user_data.email, hashed_password=hashed, user_name=user_data.name)
     
     db.add(user)
     db.commit()
     db.refresh(user)
     
-    return {"id": user.id, "email": user.email}
+    return {"id": user.id, "user_name": user.user_name}
 
 @router.post("/login")
 def login(user_date: UserCreate, db: Session = Depends(get_db)):
