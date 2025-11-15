@@ -14,13 +14,13 @@ class Task(Base):
     status = Column(String, default="new")
     priority = Column(String, default="medium")
 
-    owner_id = Column(Integer, ForeignKey("users.id"))
-    assigned_id = Column(Integer, ForeignKey("users.id"), nullable=True)
-    team_id = Column(Integer, ForeignKey("teams.id"), nullable=True)
+    ownerId = Column(Integer, ForeignKey("users.id"))
+    assignedId = Column(Integer, ForeignKey("users.id"), nullable=True)
+    teamId = Column(Integer, ForeignKey("teams.id"), nullable=True)
 
-    created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    createdAt = Column(DateTime, server_default=func.now())
+    updatedAt = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
-    owner = relationship("User", foreign_keys=[owner_id])
-    assigned = relationship("User", foreign_keys=[assigned_id])
-    team = relationship("Team", foreign_keys=[team_id])
+    owner = relationship("User", foreign_keys=[ownerId])
+    assigned = relationship("User", foreign_keys=[assignedId])
+    team = relationship("Team", foreign_keys=[teamId])

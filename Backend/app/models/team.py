@@ -9,4 +9,4 @@ class Team(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False, unique=True, index=True)
-    created_at = Column(DateTime, server_default=func.now())
+    createdAt = Column(DateTime, server_default=func.now())

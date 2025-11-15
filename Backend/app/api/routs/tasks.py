@@ -1,20 +1,20 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.api.DTOs.task import TaskOut, TaskCreate
-from app.api.dependencies import get_db, get_current_user
+from app.DTOs.task import TaskOut, TaskCreate
+from app.api.dependencies import getDb, getCurrentUser
 from app.models.task import Task
 
 router = APIRouter()
 
 @router.post("/", response_model = TaskOut)
-def create_task(data: TaskCreate, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+def createTask(data: TaskCreate, db: Session = Depends(getDb), currentUser = Depends(getCurrentUser)):
     task = Task(
         title = data.title,
         description = data.description,
         priority = data.priority,
-        owner_id = current_user.id,
-        assigned_id = data.assigned_id
+        ownerId = currentUser.id,
+        assignedId = data.assignedId
     )
     db.add(task)
     db.commit()
@@ -22,5 +22,5 @@ def create_task(data: TaskCreate, db: Session = Depends(get_db), current_user = 
     return task
 
 @router.get("/", response_model = list[TaskOut])
-def get_tasks(db: Session = Depends(get_db)):
+def getTasks(db: Session = Depends(getDb)):
     db.query(Task)

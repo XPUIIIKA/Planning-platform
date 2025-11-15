@@ -5,14 +5,14 @@ class TaskCreate(BaseModel):
     title: str
     description: Optional[str] = None
     priority: str = "medium"
-    assigned_id: Optional[int] = None
+    assignedId: Optional[int] = None
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     status: Optional[str] = None
     priority: Optional[str] = None
-    assigned_id: Optional[str] = None
+    assignedId: Optional[str] = None
 
 class TaskOut(BaseModel):
     id: int
@@ -20,8 +20,8 @@ class TaskOut(BaseModel):
     description: str
     status: str
     priority: str
-    owner_id: int
-    assigned_id: int
+    ownerId: int
+    assignedId: int
 
     class Config:
         orm_mode: True

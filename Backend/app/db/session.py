@@ -3,6 +3,6 @@ from sqlalchemy.orm import sessionmaker
 
 from app.config import settings
 
-engin = create_engine(settings.database_url , connect_args={"check_same_thread": False})
+engine = create_engine(settings.database_url , connect_args={"check_same_thread": False})
 
-SessionLocal = sessionmaker(bind = engin, autocommit = False, autoflush = False)
+SessionLocal = sessionmaker(bind = engine, autocommit = False, autoflush = False)

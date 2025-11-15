@@ -1,49 +1,48 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
 
-from app.models.user import User
-from app.api.DTOs.user import UserCreate
-from app.api.DTOs.token import RefreshTokenRequest
-from app.services.tokens import create_access_token, create_refresh_token, decode_token
-from app.api.dependencies import get_db
+from app.DTOs.user import UserCreate
+from app.DTOs.token import RefreshTokenRequest
+from app.api.dependencies import getDb
+from app.services.tokens import createAccessToken, createRefreshToken, decodeToken
+from app.services.hashService import verifyPassword
+from app.services.userService import UserService
 
 router = APIRouter()
-pwd_context = CryptContext(schemes=["bcrypt"])
-
 
 @router.post("/register")
-def register(user_data: UserCreate, db: Session = Depends(get_db)):
-    existing = db.query(User).filter(User.email == user_data.email).first()
+def register(userData: UserCreate, db: Session = Depends(getDb)):
+    userService = UserService(db)
+
+    existing = userService.foundUserByEmail(userData.email)
+
     if existing:
         raise HTTPException(status_code=400, detail="email already exists")
     
-    hashed = pwd_context.hash(user_data.password)
-    user = User(email=user_data.email, hashed_password=hashed, user_name=user_data.name)
-    
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    
-    return {"id": user.id, "user_name": user.user_name}
+    user = userService.registerUser(userData)
+
+    return {"id": user.id, "user_name": user.userName}
 
 @router.post("/login")
-def login(user_date: UserCreate, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == user_date.email).first()
-    if not user or not pwd_context.verify(user_date.password, user.hashed_password):
+def login(userData: UserCreate, db: Session = Depends(getDb)):
+    userService = UserService(db)
+
+    user = userService.foundUserByEmail(userData.email)
+
+    if not user or not verifyPassword(userData.password, user.hashedPassword):
         raise HTTPException(status_code=400, detail="invalid credentials")
     
-    acToken = create_access_token(user.id)
-    reToken = create_refresh_token(user.id)
+    acToken = createAccessToken(user.id)
+    reToken = createRefreshToken(user.id)
     
     return {"access_token": acToken, "refresh_token": reToken}
     
 @router.post("/refresh")
 def refresh(dto: RefreshTokenRequest):
-    data = decode_token(dto.refresh_token)
+    data = decodeToken(dto.refreshToken)
     if data.get("type") != "refresh":
         raise HTTPException(status_code=400, detail="invalid token type")
     
-    new_access = create_access_token(data["sub"])
+    newAccess = createAccessToken(data["sub"])
     
-    return {"access_token": new_access}
+    return {"access_token": newAccess}

@@ -3,27 +3,26 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from app.db.session import SessionLocal
-from app.services.tokens import decode_token
+from app.services.tokens import decodeToken
 from app.models.user import User
 
-oauth2_scheme =OAuth2PasswordBearer(tokenUrl="auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
-
-def get_db():
+def getDb():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    data = decode_token(token)
-    user_id = data.get("sub")
+def getCurrentUser(token: str = Depends(oauth2_scheme), db: Session = Depends(getDb)) -> User:
+    data = decodeToken(token)
+    userId = data.get("sub")
 
-    if not user_id:
+    if not userId:
         raise HTTPException(status_code=401, detail="Invalid token")
     
-    user = db.query(User).filter(User.id == int(user_id)).first()
+    user = db.query(User).filter(User.id == int(userId)).first()
 
     if not user:
         raise HTTPException(status_code=401, detail="user not found")

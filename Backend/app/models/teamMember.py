@@ -9,14 +9,14 @@ class TeamMember(Base):
     __tablename__ = "team_members"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    team_id = Column(Integer, ForeignKey("teams.id"), nullable=False)
+    userId = Column(Integer, ForeignKey("users.id"), nullable=False)
+    teamId = Column(Integer, ForeignKey("teams.id"), nullable=False)
     role = Column(String, nullable=False)
-    joined_at = Column(DateTime, server_default=func.now())
+    joinedAt = Column(DateTime, server_default=func.now())
 
     __table_args__ = (
         CheckConstraint("role IN ('admin', 'member')", name="role_check"),
     )
 
-    user = relationship("User", foreign_keys=[user_id])
-    team = relationship("Team", foreign_keys=[team_id])
+    user = relationship("User", foreign_keys=[userId])
+    team = relationship("Team", foreign_keys=[teamId])
