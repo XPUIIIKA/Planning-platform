@@ -12,7 +12,7 @@ class TaskUpdate(BaseModel):
     description: Optional[str] = None
     status: Optional[str] = None
     priority: Optional[str] = None
-    assignedId: Optional[str] = None
+    assignedId: Optional[int] = None
 
 class TaskOut(BaseModel):
     id: int

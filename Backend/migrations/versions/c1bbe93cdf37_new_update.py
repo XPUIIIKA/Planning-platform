@@ -1,8 +1,8 @@
-"""init
+"""new update
 
-Revision ID: c7f1208d6db4
+Revision ID: c1bbe93cdf37
 Revises: 
-Create Date: 2025-11-09 18:53:00.521953
+Create Date: 2025-11-16 16:16:10.535121
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'c7f1208d6db4'
+revision: str = 'c1bbe93cdf37'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,48 +24,49 @@ def upgrade() -> None:
     op.create_table('teams',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('createdAt', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_teams_id'), 'teams', ['id'], unique=False)
     op.create_index(op.f('ix_teams_name'), 'teams', ['name'], unique=True)
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_name', sa.String(), nullable=False),
+    sa.Column('userName', sa.String(), nullable=False),
+    sa.Column('hashedPassword', sa.String(), nullable=False),
     sa.Column('email', sa.String(), nullable=False),
-    sa.Column('hashed_password', sa.String(), nullable=False),
+    sa.Column('createdAt', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
     op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
-    op.create_index(op.f('ix_users_user_name'), 'users', ['user_name'], unique=True)
+    op.create_index(op.f('ix_users_userName'), 'users', ['userName'], unique=True)
     op.create_table('tasks',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('title', sa.String(), nullable=True),
+    sa.Column('title', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=True),
-    sa.Column('status', sa.String(), nullable=True),
-    sa.Column('priority', sa.String(), nullable=True),
-    sa.Column('owner_id', sa.Integer(), nullable=True),
-    sa.Column('assigned_id', sa.Integer(), nullable=True),
-    sa.Column('team_id', sa.Integer(), nullable=True),
-    sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.Column('updated_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.ForeignKeyConstraint(['assigned_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['team_id'], ['teams.id'], ),
+    sa.Column('status', sa.String(), nullable=False),
+    sa.Column('priority', sa.String(), nullable=False),
+    sa.Column('ownerId', sa.Integer(), nullable=False),
+    sa.Column('assignedId', sa.Integer(), nullable=True),
+    sa.Column('teamId', sa.Integer(), nullable=True),
+    sa.Column('createdAt', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
+    sa.Column('updatedAt', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
+    sa.ForeignKeyConstraint(['assignedId'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['ownerId'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['teamId'], ['teams.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_tasks_id'), 'tasks', ['id'], unique=False)
     op.create_index(op.f('ix_tasks_title'), 'tasks', ['title'], unique=False)
     op.create_table('team_members',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('team_id', sa.Integer(), nullable=False),
+    sa.Column('userId', sa.Integer(), nullable=False),
+    sa.Column('teamId', sa.Integer(), nullable=False),
     sa.Column('role', sa.String(), nullable=False),
-    sa.Column('joined_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('joinedAt', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
     sa.CheckConstraint("role IN ('admin', 'member')", name='role_check'),
-    sa.ForeignKeyConstraint(['team_id'], ['teams.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['teamId'], ['teams.id'], ),
+    sa.ForeignKeyConstraint(['userId'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_team_members_id'), 'team_members', ['id'], unique=False)
@@ -80,7 +81,7 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_tasks_title'), table_name='tasks')
     op.drop_index(op.f('ix_tasks_id'), table_name='tasks')
     op.drop_table('tasks')
-    op.drop_index(op.f('ix_users_user_name'), table_name='users')
+    op.drop_index(op.f('ix_users_userName'), table_name='users')
     op.drop_index(op.f('ix_users_id'), table_name='users')
     op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
