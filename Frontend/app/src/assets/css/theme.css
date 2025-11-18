@@ -1,0 +1,17 @@
+:root {
+  --bg-primary: #ffffff;       /* основной фон */
+  --bg-secondary: #f5f5f5;     /* панели, карточки */
+  --text-primary: #1e1e1e;     /* основной текст */
+  --text-secondary: #555555;   /* вспомогательный текст */
+  --accent: #5865f2;           /* кнопки, ссылки */
+  --border: #e0e0e0;           /* границы */
+}
+
+.dark {
+  --bg-primary: #18191c;       /* основной фон */
+  --bg-secondary: #242529;     /* панели, карточки */
+  --text-primary: #e0e0e0;     /* основной текст */
+  --text-secondary: #aaaaaa;   /* вспомогательный текст */
+  --accent: #5865f2;           /* кнопки, ссылки, акцент как в Discord */
+  --border: #3a3b3f;           /* границы */
+}
