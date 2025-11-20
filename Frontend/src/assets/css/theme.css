@@ -12,6 +12,23 @@
   --bg-secondary: #242529;     /* панели, карточки */
   --text-primary: #e0e0e0;     /* основной текст */
   --text-secondary: #aaaaaa;   /* вспомогательный текст */
-  --accent: #5865f2;           /* кнопки, ссылки, акцент как в Discord */
+  --accent: #5865f2;           /* кнопки, ссылки */
   --border: #3a3b3f;           /* границы */
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.btn {
+  background-color: var(--accent);
+}
+
+.btn p {
+    color: var(--text-primary);
+}
+
+.header{
+  background-color: var(--bg-secondary);
 }

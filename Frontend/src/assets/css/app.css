@@ -1,8 +1,17 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
+  display: flex;
   padding: 2rem;
   text-align: center;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  display: block;
+  box-sizing: border-box; /* чтобы ширина включала padding и border */
+  overflow-x: hidden; /* если что-то всё же вылезет за ширину */
 }
 
 .logo {
